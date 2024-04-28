@@ -45,7 +45,7 @@ function ModalAdd({ onOpen , onClose }: { onOpen: boolean; onClose: () => void; 
       <>
       <Input 
           showCount 
-          maxLength={20} 
+          maxLength={80} 
           value={title} 
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Title" 
