@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Space, Table, Tag , Button } from 'antd';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateTodoStatus, deleteTodo , loadTodos , loadTodosFromLocalStorage  } from '../store/action';
 
 const { Column } = Table;
 
@@ -10,38 +12,30 @@ interface DataType {
     status : string[];
 }
 
-const data: DataType[] = [
-    {
-        key: '1',
-        title: 'Test Mock up 1',
-        description: 'วันนี้ฉันต้องทำการบ้าน 1 + 1 * 2 / 3 = ?',
-        status: ['process'],
-    },
-    {
-        key: '2',
-        title: 'Test Mock up 2',
-        description: 'วันนี้ฉันต้องทำการบ้าน 1 + 1 * 2 / 3 = ?',
-        status: ['process'],
-    },
-    {
-        key: '3',
-        title: 'Test Mock up 3',
-        description: 'วันนี้ฉันต้องทำการบ้าน 1 + 1 * 2 / 3 = ?',
-        status: ['success'],
-    },
-];
-
 function TableList() {
+    const todos = useSelector((state: any) => state.todos.todos);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const initialTodos = loadTodosFromLocalStorage();
+        dispatch(loadTodos(initialTodos));
+    }, [dispatch]);
+
     const FilterStatus = (value:any , record:any) => {
         return record.status.includes(value);
     };
     
-    const updateStatus = (status:string) => {
-        console.log(status)
+    const UpdateStatus = (key: React.Key, status: string) => {
+        dispatch(updateTodoStatus({ key, status }));
     };
+
+    const DeleteTodo = (key: React.Key) => {
+        dispatch(deleteTodo({ key }));
+    };
+
     return (
         <>
-            <Table dataSource={data}>
+            <Table dataSource={todos}>
                 <Column title="Title" dataIndex="title" key="title" />
                 <Column title="Description" dataIndex="description" key="description" />
                 <Column
@@ -72,13 +66,12 @@ function TableList() {
                     render={(_: any, record: DataType) => (
                         <Space size="middle">
                             {record.status.includes('process') && (
-                                <Button type="primary" onClick={() => updateStatus('success')}>Success</Button>
+                                <Button type="primary" onClick={() => UpdateStatus(record.key, 'success')}>Success</Button>
                             )}
                             {record.status.includes('success') && (
-                                <Button type="primary" ghost onClick={() => updateStatus('process')}>Process</Button>
+                                <Button type="primary" ghost onClick={() => UpdateStatus(record.key, 'process')}>Process</Button>
                             )}
-                            <Button type="primary" danger onClick={() => updateStatus('delete')}>Delete</Button>
-                      </Space>
+                            <Button type="primary" danger onClick={() => DeleteTodo(record.key)}>Delete</Button>                      </Space>
                     )}
                 />
             </Table>
