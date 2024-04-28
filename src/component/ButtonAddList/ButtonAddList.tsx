@@ -4,7 +4,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import ModalAdd from './ModalAdd';
 
 function ButtonAddList() {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const handleButtonClick = () => {
     setModalVisible(true);
