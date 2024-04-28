@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react';
 import { Space, Table, Tag , Button } from 'antd';
 
 const { Column } = Table;
@@ -35,6 +35,10 @@ function TableList() {
     const FilterStatus = (value:any , record:any) => {
         return record.status.includes(value);
     };
+    
+    const updateStatus = (status:string) => {
+        console.log(status)
+    };
     return (
         <>
             <Table dataSource={data}>
@@ -67,9 +71,14 @@ function TableList() {
                     key="action"
                     render={(_: any, record: DataType) => (
                         <Space size="middle">
-                            {record.status.includes('process') && <Button type="primary">Success</Button>}
-                            <Button type="primary" danger>Delete</Button>
-                        </Space>
+                            {record.status.includes('process') && (
+                                <Button type="primary" onClick={() => updateStatus('success')}>Success</Button>
+                            )}
+                            {record.status.includes('success') && (
+                                <Button type="primary" ghost onClick={() => updateStatus('process')}>Process</Button>
+                            )}
+                            <Button type="primary" danger onClick={() => updateStatus('delete')}>Delete</Button>
+                      </Space>
                     )}
                 />
             </Table>
